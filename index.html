@@ -4,25 +4,31 @@
     <title>Shooting Game in Virtual Reality</title>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>   
     <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.min.js"></script>
-    
+    <script src="https://unpkg.com/aframe-environment-component@1.1.0/dist/aframe-environment-component.min.js"></script>
+    <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
     <script src="./throw.js"></script>
   </head>
   <body>
-    <a-scene id="scene"  inspector="" keyboard-shortcuts="" screenshot="" vr-mode-ui="" device-orientation-permission-ui="">
+    <a-scene id="scene">
 
       <a-a-assets>
-        <a-asset-item id="bowling-ball" src="bowling_ball/scene.gltf"></a-asset-item>
-
-        <a-asset-item id="bowling-pins" src="./bowling_pin/scene.gltf"></a-asset-item>
+        <a-asset-item id="pins" src="./bowling_pin/scene.gltf"></a-asset-item>
       </a-a-assets>
+
+      <a-sky geometry="primitive: sphere;"
+      material="shader: gradient; offset: 0.0001;" radius="100"
+      theta-length="180" side="double"></a-sky>
+
+
+      <!-- <a-entity id="environment" environment="preset: none; skyType:gradient; lighting:point">
+      </a-entity> -->
+
     <!--Light-->
      <a-entity light="type: ambient; color: white; intensity:1"></a-entity>
 
      <!--Camera and Cursor-->
-     <a-entity id="camera" camera="" position="-0.072 1.384 10.5" wasd-controls="" look-controls="" rotation="-17.074142294898532 -363.48442523099413 0" data-aframe-inspector-original-camera="">
-       <a-entity id="ball" gltf-model="#bowling-ball" position="0 -4.4 3" rotation="0 180 0" scale="0.35 1 1">
-       </a-entity>
-       <a-cursor material="" raycaster="" cursor="" geometry=""></a-cursor>        
+     <a-entity id="camera" camera position="-0.08 1.4 0" wasd-controls look-controls="pointerLockEnabled:true" >
+      <a-cursor id="cursor" ></a-cursor>        
      </a-entity>
 
      <!--Bowling Balls-->
@@ -30,41 +36,49 @@
      </a-entity>
 
      <!--Ground-->
-     <a-plane id="ground" position="0 1 0" rotation="-90 0 0" height="50" width="5" color="#ede3e3" static-body visible="" material="" geometry="height: 60" velocity="">
+     <a-plane id="ground" position="0 1 -0.040" rotation="-90 0 0" height="20" width="5" color="#ede3e3" static-body="mass=1" visible="true"  geometry="height: 20" >
      </a-plane>
 
+     <a-plane id="ground" position="0 1 -0.040" rotation="-90 0 0" height="20" width="5" color="#8f4d4d" static-body visible="false"  geometry="height: 60" >
+     </a-plane>  
+
      <!--Borders-->
-     <a-box position="2.46673 1.1275 -0.0076" color="tomato" depth="1" height="1" width="1" material="color: #ff0000" geometry="depth: 1.2; height: 0.3; width: 0.3" scale="1 1.0005 50" id="box"></a-box><a-box position="-2.43326 1.127 0.00698" color="tomato" depth="1" height="1" width="1" material="color: #ff0000" geometry="depth: 1.2; height: 0.3; width: 0.3" scale="1 1 50" id="box"></a-box>
+     <a-box position="2.46673 1.1275 -0.040" color="tomato"  depth="0.4" height="1" width="1" material="color: #ff0000" geometry="depth: 0.4; height: 0.3; width: 0.3" scale="1 1.0005 50" static-body id="box"></a-box>
+     <a-box position="-2.43326 1.1275 -0.040" color="tomato"  depth="0.4" height="1" width="1" material="color: #ff0000" geometry="depth: 0.4; height: 0.3; width: 0.3" scale="1 1 50" static-body id="box"></a-box>
+    
+     <!--walls-->
+        <a-entity position="0 0.3 -10">
+          <a-box position="0 3.141 0" material="color: #b5a1a1" geometry="height: 5; width: 5"></a-box>
+          <a-box position="2.895 3.074 3.104" material="color: #000000" geometry="depth: 7; height: 5"></a-box>
+          <a-box position="-2.895 3.074 3.104" material="color: #000000" geometry="depth: 7; height: 5"></a-box>
+          <a-box position="0 5.657 3.894" material="color: #000000" geometry="depth: 10; height: 0.5; width: 7"></a-box>
+        </a-entity>
 
      <!--Pins-->
-     <a-entity id="pins" scale="2 2 2" position="-30 -2 -0.735">
-      <a-box id="pin1" gltf-model="./bowling_pin/scene.gltf" position="-0.7 1.5 20" color="tomato" depth="0.1" height="1" width="0.2" dynamic-body></a-box>
+     <a-entity id="pins" scale="2 2 2" position="-30 -2 -10" >
+      <a-entity id="pin1" gltf-model="#pins" position="-0.7 1.5 20" depth="0.1" height="1" width="0.2" dynamic-body="mass:0"></a-entity>
 
-      <a-box id="pin2" gltf-model="./bowling_pin/scene.gltf" position="-0.1 1.5 20" color="tomato" depth="0.1" height="1" width="0.2" dynamic-body></a-box>
+      <a-entity id="pin2" gltf-model="#pins" position="-0.1 1.5 20" depth="0.1" height="1" width="0.2"  dynamic-body="mass:0"></a-entity>
      
-      <a-box id="pin3" gltf-model="./bowling_pin/scene.gltf" position="0.6 1.5 20" color="tomato" depth="0.1" height="1" width="0.2" dynamic-body></a-box>
+      <a-entity id="pin3" gltf-model="#pins" position="0.6 1.5 20" depth="0.1" height="1" width="0.2" dynamic-body="mass:0"></a-entity>
 
-      <a-box id="pin4" gltf-model="./bowling_pin/scene.gltf" position="1.3 1.5 20" color="tomato" depth="0.1" height="1" width="0.2" dynamic-body></a-box>
+      <a-entity id="pin4" gltf-model="#pins" position="1.3 1.5 20" depth="0.1" height="1" width="0.2" dynamic-body="mass:0"></a-entity>
 
-      <a-box id="pin5" gltf-model="./bowling_pin/scene.gltf" position="-0.35 1.5 20.5" color="tomato" depth="0.1" height="0.9" width="0.2" dynamic-body></a-box>
+      <a-entity id="pin5" gltf-model="#pins" position="-0.35 1.5 20.5" depth="0.1" height="0.9" width="0.2" dynamic-body="mass:0"></a-entity>
 
-      <a-box id="pin6" gltf-model="./bowling_pin/scene.gltf" position="0.25 1.5 20.5" color="tomato" depth="0.1" height="0.9" width="0.2" dynamic-body></a-box>
+      <a-entity id="pin6" gltf-model="#pins" position="0.25 1.5 20.5" depth="0.1" height="0.9" width="0.2" dynamic-body="mass:0"></a-entity>
       
-      <a-box id="pin7" gltf-model="./bowling_pin/scene.gltf" position="0.9 1.5 20.5" color="tomato" depth="0.1" height="0.9" width="0.2" dynamic-body></a-box>
+      <a-entity id="pin7" gltf-model="#pins" position="0.9 1.5 20.5" depth="0.1" height="0.9" width="0.2" dynamic-body="mass:0"></a-entity>
 
-      <a-box id="pin8" gltf-model="./bowling_pin/scene.gltf" position="-0.1 1.5 21" color="tomato" depth="0.1" height="0.7" width="0.2" dynamic-body></a-box>
+      <a-entity id="pin8" gltf-model="#pins" position="-0.1 1.5 21" depth="0.1" height="0.7" width="0.2" dynamic-body="mass:0"></a-entity>
      
-      <a-box id="pin9" gltf-model="./bowling_pin/scene.gltf" position="0.6 1.5 21" color="tomato" depth="0.1" height="0.7" width="0.2" dynamic-body></a-box>
+      <a-entity id="pin9" gltf-model="#pins" position="0.6 1.5 21" depth="0.1" height="0.7" width="0.2" dynamic-body="mass:0"></a-entity>
 
-      <a-box id="pin10" gltf-model="./bowling_pin/scene.gltf" position="0.25 1.5 21.5" color="tomato" depth="0.1" height="0.5" width="0.1" dynamic-body></a-box>
+      <a-entity id="pin10" gltf-model="#pins" position="0.25 1.5 21.5" depth="0.1" height="0.5" width="0.1" dynamic-body="mass:0"></a-entity>
   </a-entity>
 
-  <!--walls-->
-  <a-box position="0 3.141 0" material="color: #b5a1a1" geometry="height: 5; width: 5"></a-box>
-  <a-box position="2.895 3.074 3.104" material="color: #000000" geometry="depth: 7; height: 5"></a-box>
-  <a-box position="-2.895 3.074 3.104" material="color: #000000" geometry="depth: 7; height: 5"></a-box>
-  <a-box position="0 5.657 3.894" material="color: #000000" geometry="depth: 10; height: 0.5; width: 7"></a-box>
-  </body> 
+  
+</body> 
 </html>
 
 
